@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "989735741178",
+    "firebase_url": "https://restaurantmenumanager-a822b.firebaseio.com",
+    "project_id": "restaurantmenumanager-a822b",
+    "storage_bucket": "restaurantmenumanager-a822b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:989735741178:android:d6106f05469e7b98",
+        "android_client_info": {
+          "package_name": "com.panchalinanayakkara.dev.restaurantmenumanager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "989735741178-4b8dchr9cs1gfqpblpu3tnahlojr1128.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.panchalinanayakkara.dev.restaurantmenumanager",
+            "certificate_hash": "3f04909fd97c54bb630119976c2f4973c40ebdf0"
+          }
+        },
+        {
+          "client_id": "989735741178-ih2jnl7h93ev2npap9seh4h3n3pa10lg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA95gV_JeF6IQ_76To3bjLcc627NvLGb-Y"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "989735741178-ih2jnl7h93ev2npap9seh4h3n3pa10lg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
