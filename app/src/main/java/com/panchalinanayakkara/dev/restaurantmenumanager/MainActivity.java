@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
+import info.hoang8f.widget.FButton;
+
 public class MainActivity extends AppCompatActivity {
 
     Button btnSignIn, btnSignUp;

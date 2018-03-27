@@ -1,72 +1,62 @@
 package com.panchalinanayakkara.dev.restaurantmenumanager;
 
 import android.app.ProgressDialog;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.panchalinanayakkara.dev.restaurantmenumanager.Model.User;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 public class SignUp extends AppCompatActivity {
 
-    MaterialEditText edtNic, edtName, edtPassword;
-    Button btnSignUp;
+    EditText username, name, password;
+    private User user;
+    FirebaseDatabase database;
+    DatabaseReference ref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        edtName = (MaterialEditText)findViewById(R.id.edtName);
-        edtPassword = (MaterialEditText)findViewById(R.id.edtPassword);
-        edtNic = (MaterialEditText)findViewById(R.id.edtNIC);
+        username = (EditText)findViewById(R.id.edtUsername);
+        name = (EditText)findViewById(R.id.edtName);
+        password = (EditText)findViewById(R.id.edtPassword);
 
-        btnSignUp = (Button) findViewById(R.id.btnSignUp);
+        user = new User();
+        database = FirebaseDatabase.getInstance();
+        ref = database.getReference().child("User");
 
-        //Initialize Firebase
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        final DatabaseReference tableUser = database.getReference("User");
+    }
 
-        btnSignUp.setOnClickListener(new View.OnClickListener() {
+    public void btnSignUp_Click(View view)
+    {
+        user.setName(name.getText().toString());
+        user.setUsername(username.getText().toString());
+        user.setPassword(password.getText().toString());
+
+        ref.child(user.getUsername()).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
-            public void onClick(View v) {
-                final ProgressDialog progressDialog = new ProgressDialog(SignUp.this);
-                progressDialog.setMessage("Please Wait");
-                progressDialog.show();
-
-                tableUser.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        //Check if already user exists
-                        if(dataSnapshot.child(edtNic.getText().toString()).exists())
-                        {
-                            progressDialog.dismiss();
-                            Toast.makeText(SignUp.this, "NIC already registered", Toast.LENGTH_SHORT).show();
-                        }
-                        else
-                        {
-                            progressDialog.dismiss();
-                            User user = new User(edtName.getText().toString(), edtPassword.getText().toString());
-                            tableUser.child(edtNic.getText().toString()).setValue(user);
-                            Toast.makeText(SignUp.this, "Sign Up Successful!", Toast.LENGTH_SHORT).show();
-                            finish();
-
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful())
+                {
+                    Toast.makeText(SignUp.this, "User Created Successfully", Toast.LENGTH_LONG).show();
+                }
+                else
+                {
+                    Toast.makeText(SignUp.this, "Failed To Create User", Toast.LENGTH_LONG).show();
+                }
             }
         });
     }

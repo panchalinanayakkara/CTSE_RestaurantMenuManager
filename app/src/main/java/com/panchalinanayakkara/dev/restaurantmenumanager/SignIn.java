@@ -1,6 +1,6 @@
 package com.panchalinanayakkara.dev.restaurantmenumanager;
 
-import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -13,55 +13,42 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.panchalinanayakkara.dev.restaurantmenumanager.Model.User;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 public class SignIn extends AppCompatActivity {
 
-    EditText edtNIC, edtPassword;
-    Button btnSignIn;
+    EditText username, password;
+    private DatabaseReference ref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
-        edtPassword = (MaterialEditText)findViewById(R.id.edtPassword);
-        edtNIC = (MaterialEditText)findViewById(R.id.edtNIC);
-        btnSignIn = (Button)findViewById(R.id.btnSignIn);
+        username = (EditText)findViewById(R.id.edtUsername);
+        password = (EditText)findViewById(R.id.edtPassword);
 
-        //Initialize Firebase
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        final DatabaseReference tableUser = database.getReference("User");
+        ref = FirebaseDatabase.getInstance().getReference().child("User");
+    }
 
-        btnSignIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        String pw;
 
-                final ProgressDialog progressDialog = new ProgressDialog(SignIn.this);
-                progressDialog.setMessage("Please Wait");
-                progressDialog.show();
+        public void btnSignIn_Click(View view)
+        {
+            String userName = username.getText().toString();
+            pw = password.getText().toString();
 
-                tableUser.addValueEventListener(new ValueEventListener() {
+            if(ref.child(userName) != null) {
+                ref.child(userName).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-
-                        //Check if user exists in the db or not
-                        if(dataSnapshot.child(edtNIC.getText().toString()).exists()) {
-                            //Get user information
-                            progressDialog.dismiss();
-
-                            User user = dataSnapshot.child(edtNIC.getText().toString()).getValue(User.class);
-                            if (user.getPassword().equals(edtPassword.getText().toString())) {
-                                Toast.makeText(SignIn.this, "Sign In Successful!", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(SignIn.this, "Sign In Failed", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                        else
-                        {
-                            progressDialog.dismiss();
-                            Toast.makeText(SignIn.this, "User Does Not Exist", Toast.LENGTH_SHORT).show();
+                        User user = dataSnapshot.getValue(User.class);
+                        if (pw.equals(user.getPassword())) {
+                            Toast.makeText(SignIn.this, "Login Successful!", Toast.LENGTH_LONG).show();
+                            Intent start = new Intent(SignIn.this, SignIn.class);
+                            startActivity(start);
+                        } else {
+                            Toast.makeText(SignIn.this, "Enter Correct Password!", Toast.LENGTH_LONG).show();
                         }
                     }
 
@@ -71,6 +58,9 @@ public class SignIn extends AppCompatActivity {
                     }
                 });
             }
-        });
-    }
+            else
+            {
+                Toast.makeText(SignIn.this, "User Doesn't Exist", Toast.LENGTH_LONG).show();
+            }
+        }
 }
