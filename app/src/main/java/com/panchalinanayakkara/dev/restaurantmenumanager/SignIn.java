@@ -45,8 +45,10 @@ public class SignIn extends AppCompatActivity {
                         User user = dataSnapshot.getValue(User.class);
                         if (pw.equals(user.getPassword())) {
                             Toast.makeText(SignIn.this, "Login Successful!", Toast.LENGTH_LONG).show();
-                            Intent start = new Intent(SignIn.this, SignIn.class);
+                            Intent start = new Intent(SignIn.this, Home.class);
+                            Common.currentUser = user;
                             startActivity(start);
+                            finish();
                         } else {
                             Toast.makeText(SignIn.this, "Enter Correct Password!", Toast.LENGTH_LONG).show();
                         }
